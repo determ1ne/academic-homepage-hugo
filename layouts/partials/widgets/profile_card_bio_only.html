@@ -1,0 +1,28 @@
+<div class="mt-3 d-md-none"></div>
+<div class="row">
+    <div class="col">
+        <div class="card border-0 shadow-sm bg-white">
+            <div class="card-body p-4">
+                <div class="row px-3 pt-3">
+                    <div class="col h3">
+                        {{ $lang := .Language.Lang }}
+                        {{ if eq $lang "zh" }}关于我{{ else }}About Me{{ end }}
+                    </div>
+                </div>
+                <div class="row p-3">
+                    <div class="col">
+                        {{ $lang := .Language.Lang }}
+                        {{ $profile := index .Site.Data (printf "profile.%s" $lang) }}
+                        <div class="text-profile-bio mt-0" {{ if $profile.short_bio_text_justify }}style="text-align: justify;"{{ end }}>
+                            {{ $profile.short_bio | safeHTML }}
+                        </div>
+                        {{ if $profile.cv_link }}
+                            <a target="_blank" href="{{ $profile.cv_link | relURL }}"><i class="fas fa-file-alt"></i> {{ if eq $lang "zh" }}简历{{ else }}Curriculum Vitae{{ end }}</a> <br/>
+                        {{ end }}
+                    </div>
+        
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>

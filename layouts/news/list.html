@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{ $news := where .Site.RegularPages "Type" "news" }}
+{{ $news = sort $news "Date" "desc" }}
+{{ $currentYear := 0 }}
+{{ $first := true }}
+
+<div class="row">
+    <div class="col-12 col-lg-10">
+        <h2 class="pt-4">{{ if eq .Language.Lang "zh" }}新闻{{ else }}News{{ end }}</h2>
+        <div class="my-3 bg-white shadow-sm rounded-xl">
+            <div class="px-3 pb-1">
+                {{ range $index, $page := $news }}
+                    {{ $year := $page.Date.Year }}
+                    {{ if ne $year $currentYear }}
+                        {{ if not $first }}
+                        </div>
+                    </div>
+                        {{ end }}
+                        <div class="media py-2 {{ if not $first }}border-top border-gray{{ end }}">
+                            <div class="mr-4 text-muted my-1">{{ $year }}</div>
+                            <div class="media-body">
+                        {{ $currentYear = $year }}
+                        {{ $first = false }}
+                    {{ end }}
+                    <div class="my-1 d-flex">
+                        <div class="h6" style="font-weight: unset;">{{ $page.Title | safeHTML }}</div>
+                        <div class="ml-auto mt-auto text-muted no-break"><i>{{ $page.Date.Format "Jan 02, 2006" }}</i></div>
+                    </div>
+                {{ end }}
+                {{ if not $first }}
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div class="row">
+    <div class="col-12 col-lg-10">
+        <h1 class="pt-4">{{ .Title }}</h1>
+        <div class="my-3 bg-white shadow-sm rounded-xl">
+            <div class="px-5 py-4">
+                {{ .Content }}
+                
+                <ul>
+                    {{ range .Pages }}
+                        <li>
+                            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                            <small class="text-muted">{{ .Date.Format "Jan 02, 2006" }}</small>
+                        </li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

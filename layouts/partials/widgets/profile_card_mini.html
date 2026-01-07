@@ -1,0 +1,119 @@
+<div class="row sticky-top" style="top: 80px">
+    <div class="col">
+        <div class="card border-0 shadow-sm bg-white">
+            <div class="card-body px-4 pt-4 pb-3">
+                <div class="row">
+                    <div class="col">
+                        {{ $lang := .Language.Lang }}
+                        {{ $profile := index .Site.Data (printf "profile.%s" $lang) }}
+                        {{ $display := index .Site.Data (printf "display.%s" $lang) }}
+                        {{ $navigation := index .Site.Data (printf "navigation.%s" $lang) }}
+                        {{ if $profile.portrait_url }}
+                        <!-- When the screen is wider than md, float the portrait on the right -->
+                        <div class="figure d-none d-md-block">
+                            <img 
+                                src="{{ $profile.portrait_url | relURL }}" 
+                                class="figure-img img-fluid" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="{{ $profile.portrait_caption }}">
+                        </div>
+                        <div class="mb-3 d-md-none text-center">
+                            <img src="{{ $profile.portrait_url | relURL }}" class="rounded-circle" style="max-width: 50%;" alt="Portrait">
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center h4">
+                        {{ $profile.primary_name }}
+                    </div>
+                </div>
+
+                <div class="row small">
+                    <div class="col text-center">
+                        {{ range $profile.positions }}
+                        {{ .name }}<br/>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="row small">
+                    <div class="col text-center">
+                        <a class="email-text" href="mailto:{{ $profile.email }}">
+                            {{ replace $profile.email "@" "(at)" }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col text-center h4">
+                        {{ if $profile.gscholar }}
+                        {{ $gscholar_url := $profile.gscholar }}
+                        {{ if in $gscholar_url "scholar.google" }}
+                        {{ else }}
+                        {{ $gscholar_url = printf "https://scholar.google.com/citations?user=%s" $profile.gscholar }}
+                        {{ end }}
+                        <a class="px-1 no-break" target="_blank" href="{{ $gscholar_url }}">
+                            <i class="fab fa-google-scholar"></i>
+                        </a>
+                        {{ end }}
+                        
+                        {{ if $profile.github }}
+                        <a class="px-1 no-break" target="_blank" href="https://github.com/{{ $profile.github }}">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        {{ end }}
+
+                        {{ if $profile.wechat_qrcode }}
+                        <a class="px-1 no-break" data-toggle="modal" data-target="#modal-wechat">
+                            <i class="fab fa-weixin"></i>
+                        </a>
+                        {{ end }}
+
+                        {{ if $profile.twitter }}
+                        <a class="px-1 no-break" target="_blank" href="https://twitter.com/{{ $profile.twitter }}">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        {{ end }}
+
+                        {{ if $profile.linkedin }}
+                        <a class="px-1 no-break" target="_blank" href="https://www.linkedin.com/in/{{ $profile.linkedin }}">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        {{ end }}
+
+                        {{ if $profile.orcid }}
+                        <a class="px-1 no-break" target="_blank" href="https://orcid.org/{{ $profile.orcid }}">
+                            <i class="fab fa-orcid"></i>
+                        </a>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{ $lang := .Language.Lang }}
+{{ $profile := index .Site.Data (printf "profile.%s" $lang) }}
+{{ if $profile.wechat_qrcode }}
+<div class="modal fade" id="modal-wechat" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img src="{{ $profile.wechat_qrcode | relURL }}" class="img-fluid">
+            </div>
+            {{ if $profile.wechat_prompt }}
+            <div class="modal-body p-1">
+                {{ $profile.wechat_prompt | safeHTML }}
+            </div>
+            {{ end }}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

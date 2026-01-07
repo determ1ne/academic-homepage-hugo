@@ -1,0 +1,36 @@
+{{ $context := .context }}
+{{ $limit := .limit }}
+{{ $news := where $context.Site.RegularPages "Type" "news" }}
+{{ $news = sort $news "Date" "desc" }}
+{{ $currentYear := 0 }}
+{{ $first := true }}
+
+<div class="my-3 bg-white shadow-sm rounded-xl">
+    <h6 class="p-3 mb-0 border-bottom border-gray"><i class="fas fa-rss"></i> {{ if eq $context.Language.Lang "zh" }}新闻{{ else }}News{{ end }} <a href="{{ printf "/%snews/" (cond (eq $context.Language.Lang "en") "" $context.Language.Lang) | relURL }}" class="float-right small">({{ if eq $context.Language.Lang "zh" }}查看全部{{ else }}view all{{ end }} <i class="fas fa-angle-double-right"></i>)</a></h6>
+    <div class="px-3 pb-1 small">
+        {{ range $index, $page := $news }}
+            {{ if or (eq $limit 0) (lt $index $limit) }}
+                {{ $year := $page.Date.Year }}
+                {{ if ne $year $currentYear }}
+                    {{ if not $first }}
+                    </div>
+                </div>
+                    {{ end }}
+                    <div class="media py-1 {{ if not $first }}border-top border-gray{{ end }}">
+                        <div class="mr-3 text-muted my-1">{{ $year }}</div>
+                        <div class="media-body">
+                    {{ $currentYear = $year }}
+                    {{ $first = false }}
+                {{ end }}
+                <div class="my-1 d-flex">
+                    <div>{{ $page.Title | safeHTML }}</div>
+                    <div class="ml-auto mt-auto text-muted no-break"><i>{{ $page.Date.Format "Jan 02" }}</i></div>
+                </div>
+            {{ end }}
+        {{ end }}
+        {{ if not $first }}
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>

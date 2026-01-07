@@ -1,0 +1,82 @@
+{{ $authors := .authors }}
+{{ $site := .context.Site }}
+{{ $lang := .context.Language.Lang }}
+{{ $has_eq_contrib := false }}
+{{ $has_corresponding := false }}
+
+{{ $authorCount := len $authors }}
+{{ range $index, $author := $authors }}
+    {{ $authorStr := $author }}
+    {{ $keyClean := $authorStr }}
+    {{ $mark := "" }}
+    
+    {{ $hasStar := false }}
+    {{ $hasHash := false }}
+    
+    {{ if strings.HasSuffix $authorStr "*#" }}
+        {{ $keyClean = strings.TrimSuffix "*#" $authorStr }}
+        {{ $hasStar = true }}
+        {{ $hasHash = true }}
+    {{ else if strings.HasSuffix $authorStr "#*" }}
+        {{ $keyClean = strings.TrimSuffix "#*" $authorStr }}
+        {{ $hasStar = true }}
+        {{ $hasHash = true }}
+    {{ else if strings.HasSuffix $authorStr "*" }}
+        {{ $keyClean = strings.TrimSuffix "*" $authorStr }}
+        {{ $hasStar = true }}
+    {{ else if strings.HasSuffix $authorStr "#" }}
+        {{ $keyClean = strings.TrimSuffix "#" $authorStr }}
+        {{ $hasHash = true }}
+    {{ end }}
+    
+    {{ if $hasStar }}
+        {{ $mark = printf "%s*" $mark }}
+        {{ $has_eq_contrib = true }}
+    {{ end }}
+    
+    {{ if $hasHash }}
+        {{ $mark = printf "%s<sup>#</sup>" $mark }}
+        {{ $has_corresponding = true }}
+    {{ end }}
+
+    {{ $info := index $site.Data.authors $keyClean }}
+    {{ $name := $keyClean }}
+    {{ if $info }}
+        {{ if $info.name }}
+            {{ if reflect.IsMap $info.name }}
+                {{ $name = index $info.name $lang | default $keyClean }}
+            {{ else }}
+                {{ $name = $info.name }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    {{ $display_name := printf "%s%s" $name $mark }}
+    {{ if $info }}
+        {{ if eq $info.bold true }}
+            {{ $display_name = printf "<strong>%s</strong>" $display_name }}
+        {{ end }}
+    {{ end }}
+    
+    {{ if $info }}
+        {{ if $info.url }}
+            <a class="text-body" target="_blank" href="{{ $info.url }}">{{ $display_name | safeHTML }}</a>{{- if lt (add $index 1) $authorCount -}}, {{- end -}}
+        {{ else }}
+            <span class="text-body">{{ $display_name | safeHTML }}</span>{{- if lt (add $index 1) $authorCount -}}, {{- end -}}
+        {{ end }}
+    {{ else }}
+        <span class="text-body">{{ $display_name | safeHTML }}</span>{{- if lt (add $index 1) $authorCount -}}, {{- end -}}
+    {{ end }}
+{{ end }}
+
+{{ if or $has_eq_contrib $has_corresponding }}
+<mark>(
+    {{ if $has_eq_contrib }}
+        * <i> {{ if eq $lang "zh" }}平等贡献{{ else }}equal contribution{{ end }}</i>
+    {{ end }}
+    {{ if $has_corresponding }}
+        {{ if $has_eq_contrib }}, {{ end }}
+        <sup>#</sup> <i> {{ if eq $lang "zh" }}通讯作者{{ else }}corresponding author{{ end }}</i>
+    {{ end }}
+)</mark>
+{{ end }}

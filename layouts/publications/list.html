@@ -1,0 +1,41 @@
+{{ define "main" }}
+{{ $pubs := where .Site.RegularPages "Type" "publications" }}
+{{ $pubs = sort $pubs "Date" "desc" }}
+{{ $pubsByYear := dict }}
+{{ range $pubs }}
+    {{ $year := .Date.Year }}
+    {{ $yearStr := printf "%d" $year }}
+    {{ $yearPubs := index $pubsByYear $yearStr | default (slice) }}
+    {{ $yearPubs = $yearPubs | append . }}
+    {{ $pubsByYear = merge $pubsByYear (dict $yearStr $yearPubs) }}
+{{ end }}
+
+{{ $years := slice }}
+{{ range $year, $pubSlice := $pubsByYear }}
+    {{ $years = $years | append (dict "year" $year "pubs" $pubSlice) }}
+{{ end }}
+{{ $years = sort $years "year" "desc" }}
+
+<div class="row">
+    <div class="col-12 col-lg-10">
+        {{ range $years }}
+        {{ $year := .year }}
+        {{ $yearPubs := .pubs }}
+        <h2 class="pt-4" id="year-{{ $year }}">{{ $year }}</h2>
+        <div class="my-0 p-0 bg-white shadow-sm rounded-xl">
+            {{ range $index, $pub := $yearPubs }}
+                {{ partial "widgets/publication_item.html" (dict "item" $pub "hide_bottom_border" (eq $index (sub (len $yearPubs) 1)) "first" (eq $index 0) "last" (eq $index (sub (len $yearPubs) 1)) "context" $) }}
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+
+    <div class="col-2 d-none d-lg-block">
+        <div id="navbar-year" class="nav nav-pills flex-column sticky-top" style="top: 80px">
+            {{ range $years }}
+            <a class="nav-link d-block" href="#year-{{ .year }}">{{ .year }}</a>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ end }}

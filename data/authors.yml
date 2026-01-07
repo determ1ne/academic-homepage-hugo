@@ -1,0 +1,39 @@
+"Your Name":
+  bold: true
+  name:
+    zh: "你的名字"
+    en: "Your Name"
+
+"Robert White":
+  url: https://www.google.com/?q=Robert+White
+  name:
+    zh: "罗伯特·怀特"
+    en: "Robert White"
+
+"Charles Green (MIT)":
+  name:
+    zh: "查尔斯·格林 (麻省理工)"
+    en: "Charles Green"
+  url: https://www.google.com/?q=Charles+Green+MIT
+
+"Charles Green (Stanford)":
+  name:
+    zh: "查尔斯·格林 (斯坦福)"
+    en: "Charles Green"
+  url: https://www.google.com/?q=Charles+Green+Stanford
+
+"Garrett Harris":
+  url: https://www.google.com/?q=Garrett+Harris
+  name:
+    zh: "加勒特·哈里斯"
+    en: "Garrett Harris"
+
+"James Wang":
+  url: https://www.google.com/?q=James+Wang
+  name: "James Wang (Multilingual)"
+
+"John Doe":
+  url: https://www.google.com/?q=John+Doe
+  name:
+    zh: "约翰·多伊"
+    en: "John Doe"
