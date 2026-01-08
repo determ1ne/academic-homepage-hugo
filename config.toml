@@ -1,4 +1,6 @@
-baseURL = "."
+# BUG: baseURL must be set to empty string
+#      to avoid incorrect URL generation in multilingual sites
+baseURL = ""
 title = "Your Name"
 
 [languages]
